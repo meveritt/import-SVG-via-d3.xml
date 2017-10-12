@@ -1,0 +1,86 @@
+
+<html lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="description" content="responsive d3 chart" />
+		<meta name="author" content="Michael Everitt" />
+		<title>ImportMultipleSVG-01.html</title>
+ 		<script src="https://d3js.org/d3.v4.min.js"></script>
+		<script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.17.0/TweenMax.min.js"></script>
+		<link href='http://fonts.googleapis.com/css?family=Roboto:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="">
+		<style>
+			body {
+				margin: 0;
+				padding: 0;
+				font-family: Roboto, Arial, helvetica, sans-serif;
+				font-size: calc(1em + 1vw);   
+				color: SaddleBrown;
+			}
+			.contentArea{
+				width:1000px;
+				margin: 0 auto;
+			}
+			#graph{
+				width:800px;	
+				height:800px;
+				margin: 50px auto 20px auto;
+				background-color: #8ABABB;
+			}
+			.notes{
+				font-size:.8em;
+				text-align: center;
+			}
+			</style>
+
+		</head>
+
+		<body>
+			<div class="contentArea">
+				<div id="graph"></div>
+				<div class="notes">Hello notes</div>
+			</div>
+		</body>
+		<script>
+			// Width and height
+			var width = 800;
+			var height = 800;
+
+			var dataset = [10, 20, 30, 40, 50, 60, 70, 80];
+
+			// Create SVG Element
+			var svg = d3.select("#graph")
+			  .append("svg")
+			  .attr("width", width)
+			  .attr("height", height);
+
+			// Import the image
+			d3.xml("http://informativity.com/lab/ME_Patterns/PatternModules/A003.svg").mimeType("image/svg+xml").get(function(error, xml) {
+
+			  var importedNode = document.importNode(xml.documentElement, true);
+			  svg.selectAll("g")
+				.data(dataset)
+				.enter()
+				.append("g")
+				.attr("transform", function(d, i) { 
+				  return "translate(" + (i * (width / dataset.length)) + "," 
+					+ (height) + ")"
+					+ "scale("+ 0.5 +")"; 
+				})
+				.each(function(d, i) { 
+				  var image = this.appendChild(importedNode.cloneNode(true)); 
+				})
+				.transition()
+				.duration(1000)
+				.attr("transform", function(d, i) {
+				  return "translate(" + (i * (width / dataset.length)) + "," 
+					+ (height - 800) + ")"
+					+ "scale("+ 1 +")";
+			});    
+		});
+
+		// Inspiration thank you to Mr. Viau
+		// http://jsfiddle.net/christopheviau/XnG6r/<!DOCTYPE html>
+	</script>
+</html>
